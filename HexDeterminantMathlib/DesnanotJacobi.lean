@@ -108,10 +108,13 @@ private lemma mul_aux_adjugate_m_eq_aux_p (M : Matrix (Fin (n + 2)) (Fin (n + 2)
   simp only [auxAdjugateM, auxP, mul_apply]
   rcases eq_or_ne j 0 with rfl | hj0
   · have h := congr_fun (congr_fun (mul_adjugate M) i) 0
-    simpa only [smul_eq_mul, smul_apply, one_apply, mul_boole] using h
+    simpa only [smul_eq_mul, Matrix.smul_apply, one_apply, mul_boole, if_true, mul_apply] using h
   · rcases eq_or_ne j (Fin.last (n + 1)) with rfl | hjk
     · have h := congr_fun (congr_fun (mul_adjugate M) i) (Fin.last (n + 1))
-      simpa only [smul_eq_mul, smul_apply, one_apply, mul_boole] using h
+      have hlast : (Fin.last (n + 1) : Fin (n + 2)) ≠ 0 := by
+        simp [Fin.ext_iff, Fin.val_last]
+      simpa only [smul_eq_mul, Matrix.smul_apply, one_apply, mul_boole, mul_apply,
+        if_true, if_neg hlast] using h
     · simp only [hj0, hjk, mul_ite, mul_one, mul_zero]
       rw [sum_eq_single j]
       · exact if_pos rfl
@@ -145,8 +148,8 @@ private lemma det_aux_adjugate_m_eq (M : Matrix (Fin (n + 2)) (Fin (n + 2)) R) :
   have h_M'_expand : (auxAdjugateM M).det =
       auxAdjugateM M 0 0 * M'11.det + (-1 : R) ^ (n + 1) *
       auxAdjugateM M 0 (Fin.last (n + 1)) * M'1n.det := by
-    rw [Matrix.det_succ_row (auxAdjugateM M) 0, Fin.sum_univ_succ]
-    rw [Finset.sum_eq_single (Fin.last n)]
+    rw [Matrix.det_succ_row (auxAdjugateM M) 0, Fin.sum_univ_succ,
+      Finset.sum_eq_single (Fin.last n)]
     · simp [M'11, M'1n, f0, fn]
     · intro b _ hb
       have h1 : (b.succ : Fin (n + 2)) ≠ 0 := Fin.succ_ne_zero b
@@ -189,8 +192,8 @@ private lemma det_aux_adjugate_m_eq (M : Matrix (Fin (n + 2)) (Fin (n + 2)) R) :
         simp [submatrix_apply, M'1n, auxAdjugateM,
             f0, fn, Fin.succAbove_zero, Fin.succAbove_last, Fin.succ_last, hr]
     · simp
-  rw [h_M'00, h_M'11_det, h_M'0n, h_M'1n]
-  rw [mul_neg, ← mul_assoc, ← mul_pow, neg_mul_neg, one_mul, one_pow]
+  rw [h_M'00, h_M'11_det, h_M'0n, h_M'1n,
+    mul_neg, ← mul_assoc, ← mul_pow, neg_mul_neg, one_mul, one_pow]
   ring
 
 private theorem det_desnanot_jacobi_mul

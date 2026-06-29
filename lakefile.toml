@@ -4,17 +4,17 @@ defaultTargets = ["HexDeterminantMathlib"]
 [[require]]
 name = "HexDeterminant"
 git = "https://github.com/kim-em/hex-determinant.git"
-rev = "38f9ee5f8ccf11923e9d94723863e1490ea776a2"
+rev = "2b8a673897668d6368819a83f24418cbd3fedb2b"
 
 [[require]]
 name = "HexBareiss"
 git = "https://github.com/kim-em/hex-bareiss.git"
-rev = "a433e76ef973bb7f8d1d20d110b1d8014d3d4f9b"
+rev = "7cf09502518293004d9db07362103a3f17c07123"
 
 [[require]]
 name = "HexMatrixMathlib"
 git = "https://github.com/kim-em/hex-matrix-mathlib.git"
-rev = "402c2a9b7ddc7b2d0b87f2fad26a1b5ecd639bd0"
+rev = "93a12c73229d235efd1a7f514c2b1db985fcb458"
 
 [[require]]
 name = "mathlib"
