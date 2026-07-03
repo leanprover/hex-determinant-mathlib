@@ -9,17 +9,17 @@ rev = "f1580d28c2e9ff9e8d4d7cdef9dccbaa17780b03"
 [[require]]
 name = "HexDeterminant"
 git = "https://github.com/leanprover/hex-determinant.git"
-rev = "b72a8d00388501d203aea57152ed211952412c96"
+rev = "3d6cef2a31a718debcf20c78124f81e2c19ced75"
 
 [[require]]
 name = "HexBareiss"
 git = "https://github.com/leanprover/hex-bareiss.git"
-rev = "55b20c9d74ad4becd967bdf8ec3ddeaccd392f94"
+rev = "50cdc4d49bdd47df3f09f18490866551fc7dd62b"
 
 [[require]]
 name = "HexMatrixMathlib"
 git = "https://github.com/leanprover/hex-matrix-mathlib.git"
-rev = "a0ae2639613d29f73a5fe5abccd7749af8f9a67c"
+rev = "9ccf1baf235ae8fe10733a279cffa96ff28236dd"
 
 [[require]]
 name = "mathlib"

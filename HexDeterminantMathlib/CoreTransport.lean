@@ -176,6 +176,7 @@ theorem detProduct_eq_matrixEquiv
     [Lean.Grind.Ring R] (M : Hex.Matrix R n n) (perm : Vector (Fin n) n) :
     Hex.Matrix.detProduct M perm =
       (List.finRange n).foldl (fun acc i => acc * matrixEquiv M i (perm[i])) 1 := by
+  rw [Hex.Matrix.detProduct, Fin.foldl_eq_finRange_foldl]
   rfl
 
 @[simp, grind =]
@@ -184,6 +185,7 @@ theorem detTerm_eq_matrixEquiv
     Hex.Matrix.detTerm M perm =
       Hex.Matrix.detSign perm *
         (List.finRange n).foldl (fun acc i => acc * matrixEquiv M i (perm[i])) 1 := by
+  rw [Hex.Matrix.detTerm, Hex.Matrix.detProduct, Fin.foldl_eq_finRange_foldl]
   rfl
 
 private theorem foldl_sum_map_start {α : Type u} {S : Type v} [AddCommMonoid S]
@@ -254,6 +256,11 @@ private theorem equivs_toFinset (n : Nat) :
   ext σ
   simp [PermutationVector.equivs_complete]
 
+/-- The executable Leibniz determinant `Hex.Matrix.det` agrees with Mathlib's
+`Matrix.det` of the corresponding Mathlib matrix `matrixEquiv M`. This is the
+bridge that lets a fact about `Matrix.det` be discharged by running the
+executable determinant, or the executable determinant be reasoned about with
+Mathlib's determinant theory. -/
 theorem det_eq [CommRing R] (M : Hex.Matrix R n n) :
     Hex.Matrix.det M = Matrix.det (matrixEquiv M) := by
   let term : Equiv.Perm (Fin n) → R := fun σ =>
@@ -657,10 +664,14 @@ theorem det_mul_det_setRow_setRow_eq_cofactorRowPairing_mul_sub
         Hex.Matrix.cofactorRowPairing M s u * Hex.Matrix.cofactorRowPairing M r v := by
   rw [Hex.Matrix.det_setRow_eq_cofactorRowPairing]
   unfold Hex.Matrix.cofactorRowPairing
+  simp only [Fin.foldl_eq_finRange_foldl]
   apply foldl_pairing_mul_sub
   · ring
   · intro col
-    exact det_mul_cofactor_setRow_eq_cofactorRowPairing_mul_sub M r s col u hrs
+    have h := det_mul_cofactor_setRow_eq_cofactorRowPairing_mul_sub M r s col u hrs
+    rw [Hex.Matrix.cofactorRowPairing, Hex.Matrix.cofactorRowPairing,
+      Fin.foldl_eq_finRange_foldl, Fin.foldl_eq_finRange_foldl] at h
+    exact h
 
 /-! ### Ordered `nMatrix` row transport helpers -/
 
