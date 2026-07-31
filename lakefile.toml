@@ -1,30 +1,35 @@
 name = "hex-determinant-mathlib"
 defaultTargets = ["HexDeterminantMathlib"]
 
+leanOptions = [
+  { name = "doc.verso", value = true },
+  { name = "doc.verso.suggestions", value = false },
+]
+
 [[require]]
 name = "HexBasic"
 git = "https://github.com/leanprover/hex-basic.git"
-rev = "f1580d28c2e9ff9e8d4d7cdef9dccbaa17780b03"
+rev = "a3ab4fd9a79efbe6b07337836b3b5828d22d65a6"
 
 [[require]]
 name = "HexDeterminant"
 git = "https://github.com/leanprover/hex-determinant.git"
-rev = "20f5785e9c85e9faa481d6b67c1382b6655b842e"
+rev = "f86320a1285796c94cb42c42afb04fde53c33234"
 
 [[require]]
 name = "HexBareiss"
 git = "https://github.com/leanprover/hex-bareiss.git"
-rev = "0317e62974acadbb68caf1f57defcc90cfe80b99"
+rev = "e21c06404d9f821a2bfd5809aa92c1d8be3a0035"
 
 [[require]]
 name = "HexMatrixMathlib"
 git = "https://github.com/leanprover/hex-matrix-mathlib.git"
-rev = "be15f40e4942fe78ed28f037c9407a94bc3c10ce"
+rev = "7b28ee80d5f372054e167b7ce0a4fe57dac90e13"
 
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
-rev = "v4.32.0-rc1-patch1"
+rev = "v4.32.2"
 
 [[lean_lib]]
 name = "HexDeterminantMathlib"

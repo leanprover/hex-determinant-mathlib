@@ -256,11 +256,12 @@ private theorem equivs_toFinset (n : Nat) :
   ext σ
   simp [PermutationVector.equivs_complete]
 
-/-- The executable Leibniz determinant `Hex.Matrix.det` agrees with Mathlib's
-`Matrix.det` of the corresponding Mathlib matrix `matrixEquiv M`. This is the
-bridge that lets a fact about `Matrix.det` be discharged by running the
-executable determinant, or the executable determinant be reasoned about with
-Mathlib's determinant theory. -/
+/-- The executable Leibniz determinant {name}`Hex.Matrix.det` agrees with
+Mathlib's {name}`Matrix.det` of the corresponding matrix
+under {name}`HexMatrixMathlib.matrixEquiv`. This bridge lets a fact about
+{name}`Matrix.det` be discharged by running the executable
+determinant, or lets the executable determinant be analyzed with Mathlib's
+determinant theory. -/
 theorem det_eq [CommRing R] (M : Hex.Matrix R n n) :
     Hex.Matrix.det M = Matrix.det (matrixEquiv M) := by
   let term : Equiv.Perm (Fin n) → R := fun σ =>
@@ -305,7 +306,9 @@ theorem matrixEquiv_borderedMinor
         (fun c : Fin (k + 1) =>
           if hc : c.val < k then ⟨c.val, Nat.lt_trans hc hk⟩ else j) := by
   ext r c
-  simp [Hex.Matrix.borderedMinor, Hex.Matrix.ofFn]
+  simp only [Hex.Matrix.borderedMinor, matrixEquiv_apply, Matrix.submatrix_apply]
+  rw [Hex.Matrix.getElem_ofFn]
+  exact Hex.Matrix.getElem_pair_eq_nested M _ _
 
 /-- Determinant form of `matrixEquiv_principalSubmatrix`. -/
 theorem det_principalSubmatrix_eq_submatrix_det [CommRing R]
@@ -337,9 +340,8 @@ theorem matrixEquiv_deleteRowCol
     matrixEquiv (Hex.Matrix.deleteRowCol M row col) =
       (matrixEquiv M).submatrix (Hex.Matrix.skipIndex row) (Hex.Matrix.skipIndex col) := by
   ext i j
-  change (Hex.Matrix.deleteRowCol M row col)[i][j] =
-    M[Hex.Matrix.skipIndex row i][Hex.Matrix.skipIndex col j]
-  rw [Hex.Matrix.getElem_deleteRowCol]
+  rw [matrixEquiv_apply, Matrix.submatrix_apply, matrixEquiv_apply,
+    Hex.Matrix.getElem_deleteRowCol]
 
 private theorem matrixEquiv_deleteRowCol_zero_zero
     (M : Hex.Matrix R (n + 2) (n + 2)) :
@@ -461,10 +463,10 @@ private theorem matrixEquiv_setRow
   ext i j
   by_cases hi : i = row
   · subst i
-    rw [Matrix.updateRow_self]
+    rw [Matrix.updateRow_self, matrixEquiv_apply]
     exact congrArg (fun rowv => rowv[j])
       (Hex.Matrix.setRow_get_self M row v)
-  · rw [Matrix.updateRow_ne hi]
+  · rw [Matrix.updateRow_ne hi, matrixEquiv_apply, matrixEquiv_apply]
     exact congrArg (fun rowv => rowv[j])
       (Hex.Matrix.setRow_row_ne M row i v hi)
 
@@ -673,7 +675,7 @@ theorem det_mul_det_setRow_setRow_eq_cofactorRowPairing_mul_sub
       Fin.foldl_eq_finRange_foldl, Fin.foldl_eq_finRange_foldl] at h
     exact h
 
-/-! ### Ordered `nMatrix` row transport helpers -/
+/-! # Ordered `nMatrix` row transport helpers -/
 
 theorem skipIndex2_ordered_four_row_p2 {n : Nat}
     (p1 p2 p3 q : Fin (n + 2))
@@ -877,7 +879,7 @@ theorem ordered_four_cofactorRowPairing_p3_q_eq_det_setRow
   intro M r3
   exact (Hex.Matrix.det_setRow_eq_cofactorRowPairing M r3 B[q]).symm
 
-/-! ### Cyclic shift permutation for ordered four-row `B[p1]` transports
+/-! # Cyclic shift permutation for ordered four-row `B[p1]` transports
 
 These helpers package the row permutation that moves `B[p1]` from position
 `p1.val` past the intermediate rows up to position `p_t.val - 1`. Together
@@ -1103,6 +1105,7 @@ private theorem matrixEquiv_setRow_p1_eq_submatrix_nMatrix
       (matrixEquiv (Hex.Matrix.nMatrix B p_t q htq)).submatrix σ id := by
   intro h1q M r m hm_bound σ
   ext i j
+  rw [matrixEquiv_apply, Matrix.submatrix_apply, matrixEquiv_apply, id_eq]
   show (Hex.Matrix.setRow M r B[p1])[i][j] = (Hex.Matrix.nMatrix B p_t q htq)[σ i][j]
   -- Determine σ i in terms of i.val via the four cycleAhead val-lemmas.
   have hr_val : r.val = p_t.val - 1 := rfl
@@ -1308,6 +1311,7 @@ private theorem matrixEquiv_nMatrix_p1_pt_eq_submatrix_setRow_q
       (matrixEquiv (Hex.Matrix.setRow M r B[q])).submatrix σ id := by
   intro h1q M r m a hm_bound σ
   ext i j
+  rw [matrixEquiv_apply, Matrix.submatrix_apply, matrixEquiv_apply, id_eq]
   show (Hex.Matrix.nMatrix B p1 p_t h1t)[i][j] =
     (Hex.Matrix.setRow M r B[q])[σ i][j]
   have hr_val : r.val = p_t.val - 1 := rfl
