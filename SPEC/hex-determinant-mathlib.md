@@ -1,5 +1,12 @@
 # hex-determinant-mathlib (depends on hex-determinant + hex-bareiss + hex-matrix-mathlib + Mathlib)
 
+## Correspondence-only classification
+
+This library is a `correspondence-only-layer`.
+
+Computational conformance owners: `HexDeterminant`, `HexBareiss`
+Computational performance owners: `HexDeterminant`, `HexBareiss`
+
 Mathlib layer for `hex-determinant`: proves that our executable Leibniz
 determinant corresponds to Mathlib's `Matrix.det`, assembles the Desnanot-Jacobi
 identity in the bordered-minor form the Bareiss correctness proof consumes, and
@@ -127,11 +134,14 @@ determinant-preserving, and `desnanot_jacobi_borderedMinor_reindex` is the
 intermediate statement in reindexed Mathlib coordinates.
 
 Consumers: `HexBareissMathlib/Bareiss.lean` (twice) and
-`HexGramSchmidtMathlib/Int/Augmented.lean`. `bareissExactDiv_borderedMinor_of_mul_eq`
-packages the resulting product identity as the `hexact` premise of
-`Hex.Matrix.stepMatrix_borderedMinor_update`; it takes the identity as the
-hypothesis `hdesnanot` and additionally requires `prevPivot ≠ 0`, the only
-nondegeneracy hypothesis anywhere in this surface.
+`HexGramSchmidtMathlib/Int/Augmented.lean`.
+`exactQuot_borderedMinor_of_mul_eq` packages the resulting product identity as
+the `hexact` premise of `Hex.Matrix.stepMatrixWith_borderedMinor_update` for an
+arbitrary coefficient type equipped with an exact quotient operation; it takes
+the identity as the hypothesis `hdesnanot` and additionally requires
+`prevPivot ≠ 0`, the only nondegeneracy hypothesis anywhere in this surface.
+`bareissExactDiv_borderedMinor_of_mul_eq` is the retained `Int` corollary used
+by the integer-only Gram–Schmidt consumer.
 
 ## Two-row replacement and Grassmann-Plücker
 
